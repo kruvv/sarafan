@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import java.time.LocalDateTime;
 
+    /** Настройка конфигурации доступа
+     *
+     */
 @Configuration
 @EnableOAuth2Sso
 @EnableWebSecurity
@@ -19,13 +22,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .mvcMatchers("/").permitAll()
-                .anyRequest().authenticated()
+                .antMatcher("/**").authorizeRequests()
+                .antMatchers("/", "/login**", "/js/**", "/error**")
+                .permitAll().anyRequest()
+                .authenticated()
+                .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
                 .csrf().disable();
     }
 
+    /** Проверяет полученный id пользователя на наличие его в базе если есть
+     * то возращает пользователя, если нет читает его данные и создает нового.
+     * @param userDetailsRepo
+     * @return
+     */
     @Bean
     public PrincipalExtractor principalExtractor(UserDetailsRepo userDetailsRepo) {
         return map -> {
