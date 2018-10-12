@@ -27,11 +27,13 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	runtime('org.springframework.boot:spring-boot-devtools')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.0.RELEASE')
 	compile('org.postgresql:postgresql')
 	compile('org.projectlombok:lombok')
 	compile('javax.xml.bind:jaxb-api')
 	compile('com.sun.xml.bind:jaxb-core')
 	compile('com.sun.xml.bind:jaxb-impl')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
