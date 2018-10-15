@@ -1,12 +1,13 @@
 package letscode.sarafan.controller;
 
-
 import com.fasterxml.jackson.annotation.JsonView;
 import letscode.sarafan.domain.Message;
 import letscode.sarafan.domain.Views;
 import letscode.sarafan.repo.MessageRepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("message")
 public class MessageController {
-
     private final MessageRepo messageRepo;
 
     @Autowired
@@ -53,7 +53,7 @@ public class MessageController {
     @PostMapping
     public Message create(@RequestBody Message message) {
         message.setCreationDate(LocalDateTime.now());
-               return messageRepo.save(message);
+        return messageRepo.save(message);
     }
 
     /** Обновление записи по id
@@ -67,7 +67,8 @@ public class MessageController {
             @PathVariable("id") Message messageFromDb,
             @RequestBody Message message
     ) {
-        BeanUtils.copyProperties(message,messageFromDb, "id");
+        BeanUtils.copyProperties(message, messageFromDb, "id");
+
         return messageRepo.save(messageFromDb);
     }
 
@@ -78,7 +79,16 @@ public class MessageController {
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Message message) {
-       messageRepo.delete(message);
+        messageRepo.delete(message);
+    }
 
+    /** Дублирует создание и обновление сообщений
+     *
+     * @return
+     */
+    @MessageMapping("/changeMessage")
+    @SendTo("/topic/activity")
+    public Message message(Message message) {
+        return messageRepo.save(message);
     }
 }
