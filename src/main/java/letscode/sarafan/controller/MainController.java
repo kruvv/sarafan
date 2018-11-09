@@ -1,6 +1,5 @@
 package letscode.sarafan.controller;
 
-
 import letscode.sarafan.domain.User;
 import letscode.sarafan.repo.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +27,12 @@ public class MainController {
 
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user) {
-
         HashMap<Object, Object> data = new HashMap<>();
 
-        data.put("profile", user);
-        data.put("messages", messageRepo.findAll());
-
+        if(user != null) {
+            data.put("profile", user);
+            data.put("messages", messageRepo.findAll());
+        }
         model.addAttribute("frontendData", data);
         model.addAttribute("isDevMode", "dev".equals(profile));
 
