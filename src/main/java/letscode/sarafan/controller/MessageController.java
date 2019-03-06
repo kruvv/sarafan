@@ -2,6 +2,7 @@ package letscode.sarafan.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import letscode.sarafan.domain.Message;
+import letscode.sarafan.domain.User;
 import letscode.sarafan.domain.Views;
 import letscode.sarafan.dto.EventType;
 import letscode.sarafan.dto.MetaDto;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ import java.util.regex.Pattern;
 @RequestMapping("message")
 public class MessageController {
     private static String URL_PATTERN = "https?:\\/\\/?[\\w\\d\\._\\-%\\/\\?=&#]+";
+    //private static String URL_PATTERN = "^(?:https?:\\\\/\\\\/)?(?:[0-9A-Z-]+\\\\.)?(?:youtu\\\\.be\\\\/|youtube\\\\.com\\\\S*[^\\\\w\\\\-\\\\s])([\\\\w\\\\-]{11})(?=[^\\\\w\\\\-]|$)(?![?=&+%\\\\w]*(?:['\\\"][^<>]*>|<\\\\/a>))[?=&+%\\\\w]*";
     private static String IMAGE_PATTERN = "\\.(jpeg|jpg|gif|png)$";
 
     private static Pattern URL_REGEX = Pattern.compile(URL_PATTERN, Pattern.CASE_INSENSITIVE);
@@ -69,9 +72,13 @@ public class MessageController {
      * @return
      */
     @PostMapping
-    public Message create(@RequestBody Message message) throws IOException {
+    public Message create(
+            @RequestBody Message message,
+            @AuthenticationPrincipal User user
+            ) throws IOException {
         message.setCreationDate(LocalDateTime.now());
         fillMeta(message);
+        message.setAuthor(user);
         Message updatedMessage = messageRepo.save(message);
 
         wsSender.accept(EventType.CREATE, updatedMessage);
@@ -128,20 +135,19 @@ public class MessageController {
             } else if (!url.contains("youtu")) {
                 MetaDto meta = getMeta(url);
 
+                message.setLinkCover(meta.getCover());
                 message.setLinkTitle(meta.getTitle());
                 message.setLinkDescription(meta.getDescription());
-                message.setLinkCover(meta.getCover());
             }
         }
-
     }
 
     private MetaDto getMeta(String url) throws IOException {
         Document doc = Jsoup.connect(url).get();
 
-        Elements title = doc.select("meta[name$=title], meta[property$=title]");
-        Elements description = doc.select("meta[name$=description], meta[property$=description]");
-        Elements cover = doc.select("meta[name$=image], meta[property$=image]");
+        Elements title = doc.select("meta[name$=title],meta[property$=title]");
+        Elements description = doc.select("meta[name$=description],meta[property$=description]");
+        Elements cover = doc.select("meta[name$=image],meta[property$=image]");
 
         return new MetaDto(
                 getContent(title.first()),

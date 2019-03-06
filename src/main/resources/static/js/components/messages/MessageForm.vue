@@ -1,16 +1,19 @@
 <template>
     <v-layout row>
         <v-text-field
-                label="New Message"
+                label="New message"
                 placeholder="Write something"
                 v-model="text"
+                @keyup.enter="save"
         />
-        <v-btn  @click="save">Save</v-btn>
+        <v-btn @click="save">
+            Save
+        </v-btn>
     </v-layout>
 </template>
 
 <script>
-    import {mapActions} from 'vuex'
+    import { mapActions } from 'vuex'
 
     export default {
         props: ['messageAttr'],
@@ -29,7 +32,6 @@
         methods: {
             ...mapActions(['addMessageAction', 'updateMessageAction']),
             save() {
-
                 const message = {
                     id: this.id,
                     text: this.text
@@ -40,6 +42,7 @@
                 } else {
                     this.addMessageAction(message)
                 }
+
                 this.text = ''
                 this.id = ''
             }
