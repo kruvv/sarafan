@@ -11,6 +11,7 @@
                             :alt="message.author.name"
                     >
                 </v-avatar>
+
                 <v-avatar
                         v-else
                         size="48px"
@@ -21,7 +22,7 @@
                 <span class="pl-3">{{ authorName }}</span>
             </div>
             <div class="pt-3">
-                {{ message.id }}
+                {{ message.text }}
             </div>
         </v-card-text>
         <media v-if="message.link" :message="message"></media>
@@ -41,11 +42,11 @@
 <script>
     import { mapActions } from 'vuex'
     import Media from 'components/media/Media.vue'
-    import CommentList from "../comment/CommentList.vue"
+    import CommentList from '../comment/CommentList.vue'
 
     export default {
         props: ['message', 'editMessage'],
-        components: {CommentList, Media },
+        components: { CommentList, Media },
         computed: {
             authorName() {
                 return this.message.author ? this.message.author.name : 'unknown'

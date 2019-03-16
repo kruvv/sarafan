@@ -15,15 +15,14 @@ import java.util.List;
 @EqualsAndHashCode(of = {"id"})
 @Data
 @JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
+        property = "id",
+        generator = ObjectIdGenerators.PropertyGenerator.class
 )
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.Id.class)
     private Long id;
-
     @JsonView(Views.IdName.class)
     private String text;
 
@@ -43,13 +42,10 @@ public class Message {
 
     @JsonView(Views.FullMessage.class)
     private String link;
-
     @JsonView(Views.FullMessage.class)
     private String linkTitle;
-
     @JsonView(Views.FullMessage.class)
     private String linkDescription;
-
     @JsonView(Views.FullMessage.class)
     private String linkCover;
 }
