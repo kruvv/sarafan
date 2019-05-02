@@ -16,7 +16,6 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 public class UserSubscription implements Serializable {
-    private static final long serialVersionUID = 9067950299475900647L;
     @EmbeddedId
     @JsonIgnore
     private UserSubscriptionId id;

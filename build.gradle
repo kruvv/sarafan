@@ -35,6 +35,7 @@ dependencies {
 	compile('org.postgresql:postgresql')
 	compile 'org.jsoup:jsoup:1.11.3'
 	compile('org.projectlombok:lombok')
+	compile 'io.sentry:sentry-spring:1.7.16'
 	compile('javax.xml.bind:jaxb-api')
 	compile('com.sun.xml.bind:jaxb-core')
 	compile('com.sun.xml.bind:jaxb-impl')

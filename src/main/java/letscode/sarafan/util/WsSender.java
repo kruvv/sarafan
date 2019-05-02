@@ -13,10 +13,7 @@ import java.util.function.BiConsumer;
 
 @Component
 public class WsSender {
-    //отвечает за отправку сообщений через очередь сообщений спринга
     private final SimpMessagingTemplate template;
-
-    //серреализует и дессериализуте обьекты
     private final ObjectMapper mapper;
 
     public WsSender(SimpMessagingTemplate template, ObjectMapper mapper) {

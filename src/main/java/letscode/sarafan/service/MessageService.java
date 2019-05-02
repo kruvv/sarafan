@@ -15,7 +15,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 @Service
 public class MessageService {
     private static String URL_PATTERN = "https?:\\/\\/?[\\w\\d\\._\\-%\\/\\?=&#]+";
-    //private static String URL_PATTERN = "^(?:https?:\\\\/\\\\/)?(?:[0-9A-Z-]+\\\\.)?(?:youtu\\\\.be\\\\/|youtube\\\\.com\\\\S*[^\\\\w\\\\-\\\\s])([\\\\w\\\\-]{11})(?=[^\\\\w\\\\-]|$)(?![?=&+%\\\\w]*(?:['\\\"][^<>]*>|<\\\\/a>))[?=&+%\\\\w]*";
     private static String IMAGE_PATTERN = "\\.(jpeg|jpg|gif|png)$";
 
     private static Pattern URL_REGEX = Pattern.compile(URL_PATTERN, Pattern.CASE_INSENSITIVE);
@@ -50,9 +48,10 @@ public class MessageService {
     ) {
         this.messageRepo = messageRepo;
         this.userSubscriptionRepo = userSubscriptionRepo;
-        this.wsSender = wsSender.getSender(ObjectType.MESSAGE, Views.IdName.class);
+        this.wsSender = wsSender.getSender(ObjectType.MESSAGE, Views.FullMessage.class);
     }
-    /*Метод заполняющий мета данные*/
+
+
     private void fillMeta(Message message) throws IOException {
         String text = message.getText();
         Matcher matcher = URL_REGEX.matcher(text);
@@ -100,7 +99,7 @@ public class MessageService {
     }
 
     public Message update(Message messageFromDb, Message message) throws IOException {
-        BeanUtils.copyProperties(message, messageFromDb, "id");
+        messageFromDb.setText(message.getText());
         fillMeta(messageFromDb);
         Message updatedMessage = messageRepo.save(messageFromDb);
 

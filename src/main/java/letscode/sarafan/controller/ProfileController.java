@@ -33,7 +33,6 @@ public class ProfileController {
             @AuthenticationPrincipal User subscriber,
             @PathVariable("channelId") User channel
     ) {
-        //Проверяем что-бы подписчик не подписывался сам на себя
         if (subscriber.equals(channel)) {
             return channel;
         } else {
@@ -41,7 +40,6 @@ public class ProfileController {
         }
     }
 
-    //the method returns all subscriptions of the current user
     @GetMapping("get-subscribers/{channelId}")
     @JsonView(Views.IdName.class)
     public List<UserSubscription> subscribers(

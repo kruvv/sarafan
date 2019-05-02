@@ -13,7 +13,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSubscriptionId implements Serializable {
-    private static final long serialVersionUID = -7624956700590198603L;
     @JsonView(Views.Id.class)
     private String channelId;
     @JsonView(Views.Id.class)

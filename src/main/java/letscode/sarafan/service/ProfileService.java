@@ -24,8 +24,6 @@ public class ProfileService {
         this.userSubscriptionRepo = userSubscriptionRepo;
     }
 
-
-    //Проверяет добавление или удаление  подписки на канал у подписчика
     public User changeSubscription(User channel, User subscriber) {
         List<UserSubscription> subcriptions = channel.getSubscribers()
                 .stream()

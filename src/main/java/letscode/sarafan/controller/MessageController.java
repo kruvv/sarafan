@@ -27,11 +27,6 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-
-    /** Получение списка всех сообщений
-     *
-     * @return
-     */
     @GetMapping
     @JsonView(Views.FullMessage.class)
     public MessagePageDto list(
@@ -41,24 +36,14 @@ public class MessageController {
         return messageService.findForUser(pageable, user);
     }
 
-    /** Получение сообщения по номеру id (пример: http://localhost:8080/message/2)
-     *
-     * @param message
-     * @return
-     */
     @GetMapping("{id}")
     @JsonView(Views.FullMessage.class)
     public Message getOne(@PathVariable("id") Message message) {
         return message;
     }
 
-
-    /** Добавление нового объекта в коллекцию методом POST
-     *
-     * @param message
-     * @return
-     */
     @PostMapping
+    @JsonView(Views.FullMessage.class)
     public Message create(
             @RequestBody Message message,
             @AuthenticationPrincipal User user
@@ -66,25 +51,14 @@ public class MessageController {
         return messageService.create(message, user);
     }
 
-    /** Обновление записи по id
-     *
-     *
-     * @param message
-     * @return
-     */
-
     @PutMapping("{id}")
+    @JsonView(Views.FullMessage.class)
     public Message update(
             @PathVariable("id") Message messageFromDb,
             @RequestBody Message message
     ) throws IOException {
         return messageService.update(messageFromDb, message);
     }
-
-    /** Удаление объекта по id
-     *
-     * @param message
-     */
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Message message) {

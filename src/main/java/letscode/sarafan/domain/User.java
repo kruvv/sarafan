@@ -11,9 +11,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Создание нового пользователя
- *
- */
 @Entity
 @Table(name = "usr")
 @Data
